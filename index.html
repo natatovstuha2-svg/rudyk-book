@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Рудик і чарівне світло осені</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+}
+
+body{
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 50% 5%,rgba(255,207,119,.17),transparent 28%),
+    linear-gradient(160deg,#140e0a,#342117 50%,#160f0b);
+  color:#39291e;
+  overflow-x:hidden;
+}
+
+/* =========================
+   ОСІННЯ МАГІЯ
+========================= */
+
+.magic-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:100;
+}
+
+.falling-leaf{
+  position:absolute;
+  top:-60px;
+  opacity:.55;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:
+      translate3d(var(--drift),110vh,0)
+      rotate(420deg);
+  }
+}
+
+.spark{
+  position:fixed;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ffe9a0;
+  box-shadow:
+    0 0 8px #fff4bd,
+    0 0 18px #ffbd42;
+  pointer-events:none;
+  z-index:999;
+  animation:sparkFly .9s ease-out forwards;
+}
+
+@keyframes sparkFly{
+  from{
+    transform:translate(0,0) scale(1);
+    opacity:1;
+  }
+
+  to{
+    transform:
+      translate(var(--sx),var(--sy))
+      scale(.15);
+    opacity:0;
+  }
+}
+
+/* =========================
+   ОБКЛАДИНКА
+========================= */
+
+#cover{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:22px;
+  background:
+    radial-gradient(circle at center,rgba(240,194,111,.13),transparent 36%),
+    linear-gradient(155deg,#120c09,#2b1b12);
+  transition:
+    opacity .9s ease,
+    visibility .9s ease;
+}
+
+#cover.opened{
+  opacity:0;
+  visibility:hidden;
+}
+
+.old-book{
+  position:relative;
+  width:min(650px,94vw);
+  min-height:min(790px,88vh);
+  padding:70px 50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  border-radius:12px 28px 28px 12px;
+
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.08),transparent 20%),
+    repeating-linear-gradient(
+      98deg,
+      rgba(255,255,255,.015) 0 2px,
+      transparent 2px 7px
+    ),
+    linear-gradient(
+      135deg,
+      #3b1c11,
+      #713d21 38%,
+      #452315 68%,
+      #2a160f
+    );
+
+  box-shadow:
+    -20px 25px 60px rgba(0,0,0,.55),
+    inset 10px 0 18px rgba(0,0,0,.4),
+    inset 0 0 90px rgba(0,0,0,.28),
+    inset 0 0 0 3px rgba(202,151,69,.45);
+}
+
+.old-book::before{
+  content:"";
+  position:absolute;
+  inset:22px;
+  border:2px solid #b98a3e;
+  border-radius:8px 20px 20px 8px;
+  box-shadow:
+    inset 0 0 0 5px rgba(75,37,18,.8),
+    inset 0 0 0 7px rgba(201,154,73,.35);
+}
+
+.old-book::after{
+  content:"";
+  position:absolute;
+  left:23px;
+  top:0;
+  bottom:0;
+  width:22px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.55),
+      rgba(232,185,93,.15),
+      rgba(0,0,0,.4)
+    );
+}
+
+.cover-content{
+  position:relative;
+  z-index:2;
+  max-width:500px;
+}
+
+.small-title{
+  color:#e6bd70;
+  font-size:13px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:30px;
+}
+
+.cover-title{
+  margin:0;
+  font-size:clamp(38px,6vw,67px);
+  line-height:1.03;
+
+  color:#f2d488;
+
+  text-shadow:
+    0 2px 0 #7a481c,
+    0 4px 15px rgba(0,0,0,.75),
+    0 0 30px rgba(255,199,76,.15);
+}
+
+.gold-divider{
+  width:180px;
+  height:1px;
+  margin:30px auto;
+
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #e8bd69,
+    transparent
+  );
+}
+
+.author{
+  color:#ead9b4;
+  font-size:18px;
+  line-height:1.5;
+}
+
+.magic-leaf-cover{
+  border:0;
+  cursor:pointer;
+  background:transparent;
+  display:block;
+  margin:30px auto 14px;
+  font-size:68px;
+
+  filter:
+    drop-shadow(0 0 10px #ffcf65)
+    drop-shadow(0 0 30px rgba(255,175,37,.7));
+
+  animation:leafGlow 2.2s ease-in-out infinite;
+}
+
+@keyframes leafGlow{
+  50%{
+    transform:scale(1.09) rotate(3deg);
+    filter:
+      drop-shadow(0 0 15px #fff2a7)
+      drop-shadow(0 0 42px #ffae28);
+  }
+}
+
+.open-btn{
+  margin-top:22px;
+  border:none;
+  cursor:pointer;
+
+  padding:15px 30px;
+  border-radius:999px;
+
+  font-family:inherit;
+  font-size:17px;
+  font-weight:bold;
+
+  color:#402615;
+
+  background:
+    linear-gradient(#ffe6a3,#d5a245);
+
+  box-shadow:
+    0 7px 18px rgba(0,0,0,.35),
+    inset 0 1px 0 #fff6d8;
+
+  transition:.25s;
+}
+
+.open-btn:hover{
+  transform:translateY(-2px) scale(1.02);
+}
+
+/* =========================
+   КНИГА
+========================= */
+
+#bookApp{
+  min-height:100vh;
+  padding:22px;
+}
+
+.topbar{
+  max-width:1280px;
+  margin:0 auto 16px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+
+  color:#f5dfb8;
+
+  padding:13px 18px;
+  border:1px solid rgba(235,195,121,.18);
+  border-radius:18px;
+
+  background:rgba(42,26,17,.68);
+  backdrop-filter:blur(12px);
+}
+
+.book-name{
+  font-size:16px;
+  font-weight:bold;
+}
+
+.counter{
+  color:#dcb977;
+  font-size:14px;
+}
+
+/* Справжній розворот */
+
+.book{
+  position:relative;
+  max-width:1280px;
+  min-height:760px;
+  margin:auto;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  border-radius:14px;
+
+  background:#f4eedf;
+
+  box-shadow:
+    0 32px 70px rgba(0,0,0,.48),
+    0 2px 0 rgba(255,255,255,.8) inset;
+
+  overflow:hidden;
+
+  perspective:1600px;
+}
+
+/* корінець */
+
+.book::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  width:26px;
+  transform:translateX(-50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(67,42,26,.13),
+      rgba(0,0,0,.19),
+      rgba(255,255,255,.18),
+      rgba(0,0,0,.1),
+      rgba(67,42,26,.05)
+    );
+
+  z-index:10;
+  pointer-events:none;
+}
+
+/* =========================
+   ІЛЮСТРАЦІЯ
+========================= */
+
+.picture-page{
+  position:relative;
+  overflow:hidden;
+  background:#1c140f;
+  min-height:760px;
+}
+
+.picture-page img{
+  width:100%;
+  height:100%;
+  min-height:760px;
+  object-fit:cover;
+  display:block;
+
+  transition:
+    transform .8s cubic-bezier(.2,.8,.2,1),
+    filter .4s ease;
+}
+
+.picture-page.alive img{
+  transform:scale(1.045);
+  filter:
+    brightness(1.05)
+    saturate(1.08);
+}
+
+.image-vignette{
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 65%,
+      rgba(28,15,7,.15)
+    ),
+    linear-gradient(
+      0deg,
+      rgba(0,0,0,.28),
+      transparent 24%
+    );
+
+  pointer-events:none;
+}
+
+.rudyk-button{
+  position:absolute;
+  left:20px;
+  bottom:18px;
+
+  border:1px solid rgba(255,235,192,.32);
+  cursor:pointer;
+
+  background:rgba(42,27,17,.65);
+  backdrop-filter:blur(8px);
+
+  color:white;
+
+  padding:10px 15px;
+  border-radius:999px;
+
+  font-family:inherit;
+
+  box-shadow:0 8px 22px rgba(0,0,0,.23);
+}
+
+.rudyk-button:hover{
+  background:rgba(82,48,24,.82);
+}
+
+/* =========================
+   ЧАРІВНИЙ ЛИСТ
+========================= */
+
+.magic-leaf{
+  position:absolute;
+  right:22px;
+  top:22px;
+
+  width:64px;
+  height:64px;
+
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+
+  font-size:31px;
+
+  background:
+    radial-gradient(
+      circle,
+      #fff2ad,
+      #f8b43d 58%,
+      #bb601a
+    );
+
+  box-shadow:
+    0 0 20px #ffd26d,
+    0 0 46px rgba(255,165,36,.55);
+
+  animation:magicPulse 2.1s infinite;
+}
+
+@keyframes magicPulse{
+  50%{
+    transform:scale(1.08);
+    box-shadow:
+      0 0 30px #fff0a1,
+      0 0 65px rgba(255,169,40,.8);
+  }
+}
+
+/* =========================
+   ТЕКСТОВА СТОРІНКА
+========================= */
+
+.text-page{
+  position:relative;
+  min-height:760px;
+
+  display:flex;
+  flex-direction:column;
+
+  padding:
+    clamp(32px,4vw,58px)
+    clamp(30px,4vw,62px);
+
+  background:
+    radial-gradient(circle at 35% 15%,rgba(255,255,255,.95),transparent 28%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(121,88,54,.018) 0 1px,
+      transparent 1px 4px
+    ),
+    #f8f3e7;
+
+  box-shadow:
+    inset 10px 0 25px rgba(82,52,29,.08);
+}
+
+.chapter{
+  font-size:12px;
+  letter-spacing:2.1px;
+  text-transform:uppercase;
+  color:#9a7045;
+}
+
+.scene-title{
+  margin:10px 0 24px;
+
+  font-size:clamp(28px,3vw,39px);
+  line-height:1.1;
+
+  color:#573720;
+}
+
+.story{
+  font-size:clamp(17px,1.45vw,21px);
+  line-height:1.72;
+}
+
+.story p{
+  margin:0 0 15px;
+}
+
+/* =========================
+   ЗАПИТАННЯ
+========================= */
+
+.questions{
+  margin-top:auto;
+  padding-top:24px;
+}
+
+.questions-title{
+  margin:0 0 12px;
+  font-size:16px;
+  color:#815429;
+}
+
+.question{
+  margin:8px 0;
+  padding:10px 13px;
+
+  border-left:3px solid #deb45f;
+  border-radius:0 10px 10px 0;
+
+  background:#fffaf0;
+
+  font-size:15px;
+  line-height:1.45;
+}
+
+/* =========================
+   РЕПЛІКА РУДИКА
+========================= */
+
+.speech{
+  position:absolute;
+  left:50%;
+  bottom:75px;
+
+  transform:
+    translateX(-50%)
+    translateY(10px);
+
+  max-width:75%;
+  padding:12px 17px;
+
+  border-radius:18px;
+
+  background:rgba(255,249,230,.96);
+
+  color:#53321c;
+
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+
+  opacity:0;
+  transition:.3s;
+
+  pointer-events:none;
+  text-align:center;
+  font-size:15px;
+}
+
+.speech.show{
+  opacity:1;
+  transform:
+    translateX(-50%)
+    translateY(0);
+}
+
+/* =========================
+   НАВІГАЦІЯ
+========================= */
+
+.navigation{
+  max-width:1280px;
+  margin:18px auto 0;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+}
+
+.nav{
+  border:none;
+  cursor:pointer;
+
+  padding:13px 22px;
+  min-width:130px;
+
+  border-radius:999px;
+
+  font-family:inherit;
+  font-size:16px;
+  font-weight:bold;
+
+  color:#452a16;
+
+  background:
+    linear-gradient(#ffe5a4,#d8a74f);
+
+  box-shadow:
+    0 9px 20px rgba(0,0,0,.24);
+
+  transition:.2s;
+}
+
+.nav:hover:not(:disabled){
+  transform:translateY(-2px);
+}
+
+.nav:disabled{
+  opacity:.35;
+  cursor:default;
+}
+
+.dots{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.dot{
+  border:0;
+  width:9px;
+  height:9px;
+  padding:0;
+  border-radius:50%;
+  background:rgba(239,206,144,.35);
+}
+
+.dot.active{
+  background:#ffd17a;
+  box-shadow:0 0 10px #ffc45b;
+  transform:scale(1.3);
+}
+
+/* перегортання */
+
+.turning{
+  animation:turnPage .55s ease;
+}
+
+@keyframes turnPage{
+  from{
+    opacity:.35;
+    transform:rotateY(-5deg) scale(.985);
+  }
+
+  to{
+    opacity:1;
+    transform:rotateY(0) scale(1);
+  }
+}
+
+/* =========================
+   ТЕЛЕФОН
+========================= */
+
+@media(max-width:800px){
+
+  #bookApp{
+    padding:10px;
+  }
+
+  .topbar{
+    margin-bottom:10px;
+    padding:10px 13px;
+  }
+
+  .book-name{
+    font-size:13px;
+  }
+
+  .counter{
+    font-size:12px;
+  }
+
+  .book{
+    display:block;
+    min-height:0;
+    border-radius:18px;
+  }
+
+  .book::after{
+    display:none;
+  }
+
+  .picture-page{
+    min-height:0;
+    height:54vh;
+    max-height:520px;
+  }
+
+  .picture-page img{
+    min-height:0;
+    height:100%;
+  }
+
+  .text-page{
+    min-height:0;
+    padding:28px 22px 32px;
+  }
+
+  .scene-title{
+    font-size:29px;
+  }
+
+  .story{
+    font-size:18px;
+    line-height:1.68;
+  }
+
+  .questions{
+    margin-top:26px;
+  }
+
+  .question{
+    font-size:16px;
+  }
+
+  .navigation{
+    margin-top:12px;
+    gap:8px;
+  }
+
+  .nav{
+    min-width:0;
+    flex:1;
+    max-width:180px;
+  }
+
+  .dots{
+    display:none;
+  }
+
+  .magic-leaf{
+    width:55px;
+    height:55px;
+    font-size:26px;
+  }
+
+  .old-book{
+    min-height:82vh;
+    padding:55px 32px;
+  }
+
+}
+
+/* маленькі телефони */
+
+@media(max-width:430px){
+
+  .cover-title{
+    font-size:39px;
+  }
+
+  .author{
+    font-size:15px;
+  }
+
+  .picture-page{
+    height:49vh;
+  }
+
+  .story{
+    font-size:17px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="magic-layer" id="magicLayer"></div>
+
+<!-- ОБКЛАДИНКА -->
+
+<section id="cover">
+
+  <div class="old-book">
+
+    <div class="cover-content">
+
+      <div class="small-title">
+        Сучасна книга школяра
+      </div>
+
+      <h1 class="cover-title">
+        Рудик і<br>
+        чарівне світло<br>
+        осені
+      </h1>
+
+      <div class="gold-divider"></div>
+
+      <div class="author">
+        Автор<br>
+        <strong>Наталія Сергіївна Товстуха</strong>
+      </div>
+
+      <button
+        class="magic-leaf-cover"
+        id="coverLeaf"
+        aria-label="Чарівний листочок">
+        🍁
+      </button>
+
+      <button class="open-btn" id="openBook">
+        Відкрити книгу
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- КНИГА -->
+
+<main id="bookApp">
+
+  <div class="topbar">
+
+    <div class="book-name">
+      Рудик і чарівне світло осені
+    </div>
+
+    <div class="counter" id="counter"></div>
+
+  </div>
+
+
+  <section class="book" id="book">
+
+    <div class="picture-page">
+
+      <img
+        id="sceneImage"
+        src="images/01.jpg"
+        alt="Ілюстрація до казки">
+
+      <div class="image-vignette"></div>
+
+      <button
+        class="magic-leaf"
+        id="magicLeaf"
+        aria-label="Чарівний листочок">
+        🍁
+      </button>
+
+      <button
+        class="rudyk-button"
+        id="rudykButton">
+        🦊 Торкнися Рудика
+      </button>
+
+      <div
+        class="speech"
+        id="speech">
+      </div>
+
+    </div>
+
+
+    <article class="text-page">
+
+      <div
+        class="chapter"
+        id="chapter">
+      </div>
+
+      <h2
+        class="scene-title"
+        id="sceneTitle">
+      </h2>
+
+      <div
+        class="story"
+        id="story">
+      </div>
+
+      <div class="questions">
+
+        <h3 class="questions-title">
+          ✦ Перевір себе
+        </h3>
+
+        <div id="questions"></div>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <div class="navigation">
+
+    <button
+      class="nav"
+      id="prev">
+      ← Назад
+    </button>
+
+    <div
+      class="dots"
+      id="dots">
+    </div>
+
+    <button
+      class="nav"
+      id="next">
+      Далі →
+    </button>
+
+  </div>
+
+</main>
+
+
+<script>
+
+const pages=[
+
+{
+image:"images/01.jpg",
+chapter:"Сторінка 1",
+title:"Осінній сад Рудика",
+
+text:[
+"У самому серці стародавнього саду жило маленьке лисеня на ім’я Рудик. Він був незвичайним лисом, бо понад усе на світі любив осінь.",
+"Кожного ранку Рудик пов’язував свій улюблений синій шарфик і вирушав на прогулянку, щоб послухати, як шелестить під лапками золоте листя. Його хутро було таким же яскравим, як і навколишні дерева."
+],
+
+questions:[
+"Як звали маленьке лисеня?",
+"Яку пору року найбільше любив Рудик?",
+"Що він любив слухати під час прогулянки?"
+],
+
+speech:"Шурх-шурх! Чуєш, як розмовляє осіннє листя?"
+},
+
+
+{
+image:"images/02.jpg",
+chapter:"Сторінка 2",
+title:"Останній листочок",
+
+text:[
+"Одного дня Рудик помітив, що дерева стали майже порожніми. Вітер забрав майже все листя, залишивши сад тихим і трохи сумним.",
+"Але на найвищій гілці старого клена він побачив дещо дивовижне. Там висів останній листочок, який не просто жовтів — він сяяв, ніби маленька зірка, що спустилася з неба."
+],
+
+questions:[
+"Що сталося з деревами?",
+"Де Рудик побачив останній листочок?",
+"На що був схожий сяючий лист?"
+],
+
+speech:"Ти теж його бачиш? Він справді світиться!"
+},
+
+
+{
+image:"images/03.jpg",
+chapter:"Сторінка 3",
+title:"Листочок Бажань",
+
+text:[
+"Раптом легкий вітерець підхопив листочок, і той повільно опустився прямо в лапки Рудику. Як тільки лисеня торкнулося його, він відчув дивне тепло.",
+"Це був чарівний Листочок Бажань. У лісі казали, що той, хто знайде останній лист, може здійснити будь-яку свою мрію.",
+"Рудик міцно тримав свій скарб, боячись його випустити."
+],
+
+questions:[
+"Як листочок потрапив до Рудика?",
+"Як називався чарівний лист?",
+"Що міг здійснити той, хто його знайде?"
+],
+
+speech:"Ого! Він теплий! А яке бажання загадав би ти?"
+},
+
+
+{
+image:"images/04.jpg",
+chapter:"Сторінка 4",
+title:"Найважливіше бажання",
+
+text:[
+"Лисеня почало думати про своє бажання.",
+"«Можливо, я хочу цілу гору солодких ягід? Або щоб мій синій шарфик ніколи не зношувався?» — міркував він.",
+"Але чим довше він дивився на чарівний вогник, тим більше розумів, що йому хочеться чогось зовсім іншого, чого не можна просто з’їсти чи вдягнути."
+],
+
+questions:[
+"Про які бажання спочатку думав Рудик?",
+"Чому вони перестали здаватися йому важливими?",
+"Як ти думаєш, чого насправді не вистачало Рудику?"
+],
+
+speech:"Ягоди — це смачно... але, здається, я хочу чогось важливішого."
+},
+
+
+{
+image:"images/05.jpg",
+chapter:"Сторінка 5",
+title:"Дівчинка на містку",
+
+text:[
+"Неподалік, на дерев’яному містку через струмок, стояла дівчинка на ім’я Мія. Вона нещодавно переїхала до будиночка біля саду і ще не встигла знайти друзів.",
+"Мія сумно дивилася на воду, де плавали поодинокі листочки. Їй було трохи самотньо в цьому великому золотому саду, де вона нікого не знала."
+],
+
+questions:[
+"Як звали дівчинку?",
+"Чому Мія почувалася самотньою?",
+"Де Рудик побачив її?"
+],
+
+speech:"Вона така сумна... Мабуть, їй теж потрібен друг."
+},
+
+
+{
+image:"images/06.jpg",
+chapter:"Сторінка 6",
+title:"Правильне рішення",
+
+text:[
+"Рудик побачив Мію і відчув, як його серце підказує правильне рішення. Він знав, як це — бути одному.",
+"Лисеня обережно почало пробиратися крізь кущі, намагаючись не налякати дівчинку. Сяючий листочок у його лапці освітлював шлях, наче маленький чарівний ліхтарик."
+],
+
+questions:[
+"Що підказало Рудику серце?",
+"Чому він добре розумів Мію?",
+"На що був схожий сяючий листочок?"
+],
+
+speech:"Тихенько... Не хочу її налякати."
+},
+
+
+{
+image:"images/07.jpg",
+chapter:"Сторінка 7",
+title:"Перший крок до дружби",
+
+text:[
+"Мія почула шурхіт і обернулася. Перед нею, прямо на каменях біля містка, стояло пухнасте лисеня.",
+"Воно не втекло, а навпаки — підійшло ближче і простягнуло їй чарівний листочок.",
+"Світло від нього було таким яскравим і теплим, що сум Мії миттєво зник, поступившись місцем справжньому захопленню."
+],
+
+questions:[
+"Що зробила Мія, почувши шурхіт?",
+"Що простягнув їй Рудик?",
+"Як змінився настрій дівчинки?"
+],
+
+speech:"Не бійся. Це тобі."
+},
+
+
+{
+image:"images/08.jpg",
+chapter:"Сторінка 8",
+title:"Два самотні серця",
+
+text:[
+"«Це мені?» — тихо запитала Мія.",
+"Рудик кивнув і тихенько ткнувся носом у її руку. Дівчинка обережно взяла листочок за черешок. Тепер вони обидва торкалися магії.",
+"У цей момент вони зрозуміли, що чарівний лист знайшов своє справжнє призначення — поєднати два самотніх серця."
+],
+
+questions:[
+"Що запитала Мія?",
+"Як Рудик відповів їй без слів?",
+"Яким було справжнє призначення чарівного листочка?"
+],
+
+speech:"Здається, моє бажання вже здійснилося."
+},
+
+
+{
+image:"images/09.jpg",
+chapter:"Чарівна мить",
+title:"Осінь запалює світло",
+
+text:[
+"І в цю мить осінній сад засяяв по-новому. Золоті іскорки закружляли в повітрі, а навколо Мії та Рудика розлилося тепле чарівне світло.",
+"Здавалося, ніби сама осінь усміхнулася їм у відповідь. Так почалося справжнє диво — диво дружби."
+],
+
+questions:[
+"Що сталося в саду?",
+"Яке справжнє диво відбулося?",
+"Який настрій викликає ця мить?"
+],
+
+speech:"Оце так диво! Але найкраще — тепер ми не самі."
+},
+
+
+{
+image:"images/10.jpg",
+chapter:"Фінал",
+title:"Найтепліше світло",
+
+text:[
+"Тепер кожного дня в осінньому саду можна побачити незвичайну пару: маленьку дівчинку та лисеня в синьому шарфику. Вони разом грають у листі та шукають нові пригоди.",
+"Рудик зрозумів головний секрет: магія стає сильнішою, коли ти ділишся нею з другом. А найтепліше світло — це те, що сяє в очах дорогої тобі істоти."
+],
+
+questions:[
+"Кого тепер можна побачити разом у саду?",
+"Який головний секрет зрозумів Рудик?",
+"Що для тебе означає справжня дружба?"
+],
+
+speech:"Ходімо! Попереду ще стільки пригод!"
+}
+
+];
+
+
+let current=0;
+
+const book=document.getElementById("book");
+const sceneImage=document.getElementById("sceneImage");
+const chapter=document.getElementById("chapter");
+const sceneTitle=document.getElementById("sceneTitle");
+const story=document.getElementById("story");
+const questions=document.getElementById("questions");
+const counter=document.getElementById("counter");
+const prev=document.getElementById("prev");
+const next=document.getElementById("next");
+const dots=document.getElementById("dots");
+const speech=document.getElementById("speech");
+const rudykButton=document.getElementById("rudykButton");
+
+
+function makeDots(){
+
+  dots.innerHTML="";
+
+  pages.forEach((page,index)=>{
+
+    const dot=document.createElement("button");
+
+    dot.className="dot";
+
+    if(index===current){
+      dot.classList.add("active");
+    }
+
+    dot.onclick=()=>{
+      current=index;
+      render();
+    };
+
+    dots.appendChild(dot);
+
+  });
+
+}
+
+
+function render(){
+
+  const page=pages[current];
+
+  sceneImage.src=page.image;
+
+  chapter.textContent=page.chapter;
+
+  sceneTitle.textContent=page.title;
+
+  story.innerHTML=
+    page.text
+    .map(p=>`<p>${p}</p>`)
+    .join("");
+
+  questions.innerHTML=
+    page.questions
+    .map(q=>`<div class="question">• ${q}</div>`)
+    .join("");
+
+  counter.textContent=
+    `${current+1} / ${pages.length}`;
+
+  prev.disabled=current===0;
+
+  if(current===pages.length-1){
+    next.textContent="На початок ↺";
+  }else{
+    next.textContent="Далі →";
+  }
+
+  speech.classList.remove("show");
+
+  book.classList.remove("turning");
+
+  void book.offsetWidth;
+
+  book.classList.add("turning");
+
+  makeDots();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+prev.onclick=()=>{
+
+  if(current>0){
+    current--;
+    render();
+  }
+
+};
+
+
+next.onclick=()=>{
+
+  if(current<pages.length-1){
+
+    current++;
+
+  }else{
+
+    current=0;
+
+  }
+
+  render();
+
+};
+
+
+rudykButton.onclick=()=>{
+
+  const picture=
+    document.querySelector(".picture-page");
+
+  picture.classList.add("alive");
+
+  speech.textContent=
+    pages[current].speech;
+
+  speech.classList.add("show");
+
+  const r=
+    rudykButton.getBoundingClientRect();
+
+  sparkleBurst(
+    r.left+r.width/2,
+    r.top
+  );
+
+  setTimeout(()=>{
+    picture.classList.remove("alive");
+  },850);
+
+  setTimeout(()=>{
+    speech.classList.remove("show");
+  },4200);
+
+};
+
+
+document
+.getElementById("magicLeaf")
+.onclick=function(){
+
+  const r=
+    this.getBoundingClientRect();
+
+  sparkleBurst(
+    r.left+r.width/2,
+    r.top+r.height/2,
+    32
+  );
+
+};
+
+
+document
+.getElementById("coverLeaf")
+.onclick=function(){
+
+  const r=
+    this.getBoundingClientRect();
+
+  sparkleBurst(
+    r.left+r.width/2,
+    r.top+r.height/2,
+    38
+  );
+
+};
+
+
+document
+.getElementById("openBook")
+.onclick=()=>{
+
+  document
+  .getElementById("cover")
+  .classList.add("opened");
+
+  setTimeout(()=>{
+    createLeaves(7);
+  },350);
+
+};
+
+
+function sparkleBurst(x,y,count=24){
+
+  for(let i=0;i<count;i++){
+
+    const s=
+      document.createElement("span");
+
+    s.className="spark";
+
+    s.style.left=x+"px";
+    s.style.top=y+"px";
+
+    s.style.setProperty(
+      "--sx",
+      `${(Math.random()-.5)*190}px`
+    );
+
+    s.style.setProperty(
+      "--sy",
+      `${(Math.random()-.5)*190}px`
+    );
+
+    document.body.appendChild(s);
+
+    setTimeout(()=>{
+      s.remove();
+    },950);
+
+  }
+
+}
+
+
+function createLeaves(amount=1){
+
+  const layer=
+    document.getElementById("magicLayer");
+
+  const symbols=[
+    "🍂",
+    "🍁"
+  ];
+
+  for(let i=0;i<amount;i++){
+
+    const leaf=
+      document.createElement("span");
+
+    leaf.className=
+      "falling-leaf";
+
+    leaf.textContent=
+      symbols[
+        Math.floor(
+          Math.random()*symbols.length
+        )
+      ];
+
+    leaf.style.left=
+      Math.random()*100+"vw";
+
+    leaf.style.fontSize=
+      13+Math.random()*17+"px";
+
+    leaf.style.animationDuration=
+      8+Math.random()*7+"s";
+
+    leaf.style.setProperty(
+      "--drift",
+      `${-90+Math.random()*180}px`
+    );
+
+    layer.appendChild(leaf);
+
+    setTimeout(()=>{
+      leaf.remove();
+    },16000);
+
+  }
+
+}
+
+
+/* лише кілька листочків,
+   щоб екран не перетворився
+   на хуртовину */
+
+setInterval(()=>{
+  createLeaves(1);
+},4200);
+
+
+/* клавіші на ноутбуці */
+
+document.addEventListener(
+"keydown",
+e=>{
+
+  if(e.key==="ArrowRight"){
+    next.click();
+  }
+
+  if(e.key==="ArrowLeft"){
+    prev.click();
+  }
+
+});
+
+
+render();
+
+</script>
+
+</body>
+</html>
