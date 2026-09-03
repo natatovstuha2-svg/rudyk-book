@@ -1,1051 +1,2541 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Рудик і чарівне світло осені</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root{
-      --bg-dark:#160f0b;
-      --bg-mid:#2a1a12;
-      --gold:#e2b864;
-      --gold-soft:#f7dfad;
-      --paper:#f7f1e6;
-      --paper-2:#efe4d1;
-      --text:#3b2a1d;
-      --accent:#9f6434;
-      --shadow:0 22px 60px rgba(0,0,0,.28);
-      --radius:28px;
-    }
+<title>Рудик і чарівне світло осені</title>
 
-    *{box-sizing:border-box}
+<style>
 
-    html{scroll-behavior:smooth}
+:root{
+  --night:#130d09;
+  --night2:#2b1b12;
+  --paper:#f8f2e6;
+  --paper2:#eee2cf;
+  --ink:#38281d;
+  --gold:#e6bb63;
+  --goldLight:#ffe3a0;
+}
 
-    body{
-      margin:0;
-      font-family: Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at top, rgba(255,214,140,.14), transparent 26%),
-        linear-gradient(180deg, #1a120d 0%, #2b1a12 45%, #170f0b 100%);
-      color:var(--text);
-      min-height:100vh;
-      overflow-x:hidden;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    body.locked{
-      overflow:hidden;
-    }
+html{
+  scroll-behavior:smooth;
+}
 
-    .hidden{
-      display:none !important;
-    }
+body{
+  margin:0;
+  min-height:100vh;
 
-    /* =========================
-       FALLING LEAVES
-    ========================= */
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
-    .ambient-layer{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      z-index:5;
-    }
+  color:var(--ink);
 
-    .ambient-leaf{
-      position:absolute;
-      top:-60px;
-      opacity:.55;
-      filter:drop-shadow(0 5px 10px rgba(0,0,0,.18));
-      animation:fallLeaf linear forwards;
-      will-change:transform;
-    }
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255,205,112,.15),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #160f0b,
+      #2d1b12 55%,
+      #120c08
+    );
 
-    @keyframes fallLeaf{
-      from{
-        transform:translate3d(0,0,0) rotate(0deg);
-      }
-      to{
-        transform:translate3d(var(--drift),110vh,0) rotate(360deg);
-      }
-    }
+  overflow-x:hidden;
+}
 
-    .spark{
-      position:fixed;
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      pointer-events:none;
-      z-index:999;
-      background:radial-gradient(circle, #fff9da 0%, #ffd77e 55%, rgba(255,184,62,.15) 100%);
-      box-shadow:
-        0 0 10px rgba(255,245,192,.95),
-        0 0 22px rgba(255,191,84,.75);
-      animation:sparkFly 900ms ease-out forwards;
-    }
+body.locked{
+  overflow:hidden;
+}
 
-    @keyframes sparkFly{
-      from{
-        opacity:1;
-        transform:translate(0,0) scale(1);
-      }
-      to{
-        opacity:0;
-        transform:translate(var(--tx),var(--ty)) scale(.18);
-      }
-    }
+.hidden{
+  display:none !important;
+}
 
-    /* =========================
-       COVER
-    ========================= */
 
-    .cover-screen{
-      position:fixed;
-      inset:0;
-      z-index:100;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      background:
-        radial-gradient(circle at center, rgba(255,209,118,.10), transparent 33%),
-        linear-gradient(180deg, rgba(10,7,5,.88), rgba(20,12,8,.92));
-      transition:opacity .8s ease, visibility .8s ease, transform .8s ease;
-    }
+/* =========================================
+   ФОНОВА ОСІНЬ
+========================================= */
 
-    .cover-screen.opening{
-      opacity:0;
-      visibility:hidden;
-      transform:scale(1.02);
-    }
+#autumnLayer{
+  position:fixed;
+  inset:0;
 
-    .cover-wrap{
-      position:relative;
-      width:min(92vw, 760px);
-      aspect-ratio:3/4;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+  overflow:hidden;
+  pointer-events:none;
 
-    .cover-image{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      border-radius:18px;
-      box-shadow:
-        0 30px 80px rgba(0,0,0,.45),
-        0 0 0 1px rgba(255,220,145,.14);
-      user-select:none;
-      -webkit-user-drag:none;
-    }
+  z-index:5;
+}
 
-    .cover-shine{
-      position:absolute;
-      inset:0;
-      border-radius:18px;
-      overflow:hidden;
-      pointer-events:none;
-    }
+.fall-leaf{
+  position:absolute;
+  top:-70px;
 
-    .cover-shine::before{
-      content:"";
-      position:absolute;
-      top:-20%;
-      left:-38%;
-      width:28%;
-      height:140%;
-      background:linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,240,191,.14) 42%,
-        rgba(255,255,255,.30) 50%,
-        rgba(255,239,181,.12) 58%,
-        rgba(255,255,255,0) 100%
+  opacity:.38;
+
+  font-family:
+    "Segoe UI Emoji",
+    "Apple Color Emoji",
+    sans-serif;
+
+  filter:
+    blur(.1px)
+    drop-shadow(0 4px 7px rgba(0,0,0,.18));
+
+  animation:
+    leafFall linear forwards;
+}
+
+@keyframes leafFall{
+
+  0%{
+    transform:
+      translate3d(0,0,0)
+      rotate(0deg);
+  }
+
+  35%{
+    transform:
+      translate3d(
+        calc(var(--drift) * .35),
+        38vh,
+        0
+      )
+      rotate(120deg);
+  }
+
+  70%{
+    transform:
+      translate3d(
+        calc(var(--drift) * .8),
+        78vh,
+        0
+      )
+      rotate(265deg);
+  }
+
+  100%{
+    transform:
+      translate3d(
+        var(--drift),
+        110vh,
+        0
+      )
+      rotate(390deg);
+  }
+
+}
+
+
+/* =========================================
+   ЗОЛОТІ ІСКРИ
+========================================= */
+
+.spark{
+  position:fixed;
+
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #fffceb 0%,
+      #ffe28a 45%,
+      #ffb63e 70%,
+      transparent 75%
+    );
+
+  box-shadow:
+    0 0 8px #fff7c7,
+    0 0 18px rgba(255,187,70,.8);
+
+  pointer-events:none;
+  z-index:9999;
+
+  animation:
+    sparkMove .9s ease-out forwards;
+}
+
+@keyframes sparkMove{
+
+  from{
+    opacity:1;
+    transform:
+      translate(0,0)
+      scale(1);
+  }
+
+  to{
+    opacity:0;
+    transform:
+      translate(
+        var(--sx),
+        var(--sy)
+      )
+      scale(.12);
+  }
+
+}
+
+
+/* =========================================
+   ОБКЛАДИНКА
+========================================= */
+
+.cover-screen{
+  position:fixed;
+  inset:0;
+
+  z-index:1000;
+
+  display:flex;
+  justify-content:center;
+
+  overflow-y:auto;
+
+  padding:
+    22px
+    18px
+    40px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255,202,105,.11),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      #100b08,
+      #25170f
+    );
+
+  transition:
+    opacity .85s ease,
+    visibility .85s ease;
+}
+
+.cover-screen.opened{
+  opacity:0;
+  visibility:hidden;
+}
+
+.cover-column{
+  width:min(720px,94vw);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  margin:auto;
+}
+
+.cover-book{
+  position:relative;
+
+  width:min(670px,90vw);
+
+  aspect-ratio:3/4;
+
+  perspective:1800px;
+
+  filter:
+    drop-shadow(
+      0 32px 45px
+      rgba(0,0,0,.55)
+    );
+}
+
+.cover-image{
+  width:100%;
+  height:100%;
+
+  object-fit:contain;
+
+  display:block;
+
+  border-radius:13px;
+
+  transform-origin:left center;
+
+  transition:
+    transform .9s
+    cubic-bezier(.22,.8,.3,1),
+    opacity .75s ease;
+}
+
+.cover-book.opening
+.cover-image{
+  transform:
+    perspective(1500px)
+    rotateY(-48deg)
+    translateX(-5%);
+
+  opacity:.25;
+}
+
+
+/* легкий перелив золота */
+
+.cover-gloss{
+  position:absolute;
+  inset:0;
+
+  overflow:hidden;
+  border-radius:14px;
+
+  pointer-events:none;
+}
+
+.cover-gloss::before{
+  content:"";
+
+  position:absolute;
+
+  top:-20%;
+  left:-45%;
+
+  width:24%;
+  height:140%;
+
+  transform:
+    rotate(10deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,243,203,.08),
+      rgba(255,255,255,.30),
+      rgba(255,226,155,.08),
+      transparent
+    );
+
+  animation:
+    coverGlow 7s
+    ease-in-out infinite;
+}
+
+@keyframes coverGlow{
+
+  0%,
+  68%{
+    left:-45%;
+  }
+
+  100%{
+    left:125%;
+  }
+
+}
+
+
+/* невидима зона над листком,
+   який уже намальований
+   на обкладинці */
+
+.cover-magic-zone{
+  position:absolute;
+
+  left:50%;
+  top:71%;
+
+  width:110px;
+  height:110px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border:0;
+  border-radius:50%;
+
+  cursor:pointer;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,228,128,.16),
+      transparent 68%
+    );
+
+  box-shadow:
+    0 0 25px
+    rgba(255,201,78,.15);
+
+  animation:
+    coverLeafPulse
+    2.4s ease-in-out infinite;
+}
+
+@keyframes coverLeafPulse{
+
+  50%{
+    transform:
+      translate(-50%,-50%)
+      scale(1.10);
+
+    box-shadow:
+      0 0 35px
+      rgba(255,210,98,.30);
+  }
+
+}
+
+
+/* кнопка ТЕПЕР ПІД КНИГОЮ */
+
+.cover-controls{
+  width:100%;
+
+  padding-top:22px;
+
+  text-align:center;
+}
+
+.cover-message{
+  margin:
+    0
+    0
+    13px;
+
+  color:#f7e4be;
+
+  font-size:15px;
+
+  letter-spacing:.2px;
+}
+
+.open-button{
+  border:none;
+
+  padding:
+    14px
+    30px;
+
+  border-radius:999px;
+
+  cursor:pointer;
+
+  font-family:inherit;
+  font-size:17px;
+  font-weight:700;
+
+  color:#432812;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffe8aa,
+      #d9aa50
+    );
+
+  box-shadow:
+    0 11px 28px
+    rgba(0,0,0,.32),
+    inset 0 1px 0
+    rgba(255,255,255,.55);
+
+  transition:
+    transform .22s ease;
+}
+
+.open-button:hover{
+  transform:
+    translateY(-2px)
+    scale(1.02);
+}
+
+
+/* =========================================
+   ОСНОВНА КНИГА
+========================================= */
+
+.book-app{
+  position:relative;
+  z-index:10;
+
+  min-height:100vh;
+
+  padding:
+    18px
+    18px
+    30px;
+}
+
+.topbar{
+  width:min(
+    1260px,
+    96vw
+  );
+
+  margin:
+    0 auto
+    16px;
+
+  padding:
+    13px
+    18px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:12px;
+
+  border-radius:18px;
+
+  color:#f9e5bd;
+
+  background:
+    rgba(64,39,24,.66);
+
+  backdrop-filter:
+    blur(9px);
+
+  border:
+    1px solid
+    rgba(255,214,139,.12);
+}
+
+.book-name{
+  font-weight:700;
+}
+
+.counter{
+  color:#e8ca8c;
+  font-size:14px;
+}
+
+
+/* =========================================
+   РОЗВОРОТ
+========================================= */
+
+.book{
+  position:relative;
+
+  width:min(
+    1260px,
+    96vw
+  );
+
+  min-height:730px;
+
+  margin:auto;
+
+  display:grid;
+  grid-template-columns:
+    1fr
+    1fr;
+
+  border-radius:25px;
+
+  overflow:hidden;
+
+  background:#f4ebdb;
+
+  box-shadow:
+    0 30px 65px
+    rgba(0,0,0,.38);
+
+  perspective:1800px;
+}
+
+
+/* корінець книги */
+
+.book::after{
+  content:"";
+
+  position:absolute;
+
+  left:50%;
+  top:0;
+  bottom:0;
+
+  width:26px;
+
+  transform:
+    translateX(-50%);
+
+  z-index:30;
+
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(74,43,23,.13),
+      rgba(0,0,0,.15),
+      rgba(255,255,255,.20),
+      rgba(0,0,0,.12),
+      rgba(73,44,25,.08),
+      transparent
+    );
+}
+
+
+/* =========================================
+   ІЛЮСТРАЦІЯ
+========================================= */
+
+.illustration{
+  position:relative;
+
+  min-height:730px;
+
+  overflow:hidden;
+
+  background:#1a120d;
+}
+
+.scene-image{
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  object-fit:cover;
+
+  transition:
+    transform .7s
+    cubic-bezier(.2,.8,.25,1);
+}
+
+.scene-image.page-enter{
+  animation:
+    imageEnter .65s ease;
+}
+
+@keyframes imageEnter{
+
+  from{
+    opacity:.25;
+    transform:scale(1.025);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+
+}
+
+
+.image-shadow{
+  position:absolute;
+  inset:0;
+
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 65%,
+      rgba(20,10,5,.12)
+    ),
+    linear-gradient(
+      0deg,
+      rgba(0,0,0,.20),
+      transparent 28%
+    );
+}
+
+
+/* =========================================
+   ОКРЕМИЙ ЧАРІВНИЙ ЛИСТ
+========================================= */
+
+.magic-leaf-button{
+  position:absolute;
+
+  padding:0;
+
+  border:none;
+  outline:none;
+
+  cursor:pointer;
+
+  background:transparent;
+
+  z-index:15;
+
+  transform:
+    translate(-50%,-50%)
+    rotate(var(--rotation));
+
+  transition:
+    left .7s ease,
+    top .7s ease,
+    width .7s ease,
+    opacity .35s ease;
+}
+
+.magic-leaf-button.hidden-leaf{
+  opacity:0;
+  pointer-events:none;
+}
+
+.magic-leaf-image{
+  width:100%;
+  height:auto;
+
+  display:block;
+
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(255,235,142,.85)
+    )
+    drop-shadow(
+      0 0 23px
+      rgba(255,176,44,.55)
+    );
+
+  animation:
+    magicLeafBreath
+    2.45s ease-in-out
+    infinite;
+}
+
+@keyframes magicLeafBreath{
+
+  0%,
+  100%{
+    transform:
+      scale(1);
+    filter:
+      brightness(1)
+      drop-shadow(
+        0 0 8px
+        rgba(255,235,142,.8)
+      )
+      drop-shadow(
+        0 0 20px
+        rgba(255,175,42,.48)
       );
-      transform:rotate(8deg);
-      animation:coverSweep 7.2s ease-in-out infinite;
-    }
+  }
 
-    @keyframes coverSweep{
-      0%, 72%{
-        left:-42%;
-      }
-      100%{
-        left:120%;
-      }
-    }
+  50%{
+    transform:
+      scale(1.075);
 
-    .cover-leaf-hotspot{
-      position:absolute;
-      left:50%;
-      top:71.5%;
-      transform:translate(-50%,-50%);
-      width:108px;
-      height:108px;
-      border:none;
-      border-radius:50%;
-      cursor:pointer;
-      background:
-        radial-gradient(circle, rgba(255,245,186,.36) 0%, rgba(255,200,95,.18) 46%, rgba(255,165,47,0) 72%);
-      box-shadow:
-        0 0 25px rgba(255,206,95,.55),
-        0 0 60px rgba(255,179,42,.18);
-      animation:leafPulse 2.2s ease-in-out infinite;
-    }
+    filter:
+      brightness(1.13)
+      drop-shadow(
+        0 0 15px
+        rgba(255,248,190,.95)
+      )
+      drop-shadow(
+        0 0 34px
+        rgba(255,169,36,.78)
+      );
+  }
 
-    .cover-leaf-hotspot::after{
-      content:"🍁";
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:38px;
-      opacity:.94;
-      filter:drop-shadow(0 0 10px rgba(255,217,111,.95));
-    }
+}
 
-    @keyframes leafPulse{
-      0%,100%{
-        transform:translate(-50%,-50%) scale(1);
-      }
-      50%{
-        transform:translate(-50%,-50%) scale(1.08);
-      }
-    }
+.magic-leaf-button.magic-click
+.magic-leaf-image{
+  animation:
+    leafMagicClick
+    .75s ease;
+}
 
-    .cover-caption{
-      position:absolute;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      width:min(92%, 520px);
-      text-align:center;
-      z-index:2;
-    }
+@keyframes leafMagicClick{
 
-    .cover-hint{
-      margin:0 0 12px;
-      color:#fff3cf;
-      font-size:.97rem;
-      text-shadow:0 2px 8px rgba(0,0,0,.55);
-    }
+  0%{
+    transform:scale(1);
+  }
 
-    .open-book-btn{
-      border:none;
-      cursor:pointer;
-      border-radius:999px;
-      padding:15px 28px;
-      font-size:1rem;
-      font-weight:bold;
-      color:#4c3118;
-      background:linear-gradient(180deg,#ffe8af 0%,#dfb660 100%);
-      box-shadow:
-        0 10px 24px rgba(0,0,0,.34),
-        inset 0 1px 0 rgba(255,255,255,.48);
-      transition:transform .2s ease, box-shadow .2s ease;
-      font-family:inherit;
-    }
+  35%{
+    transform:
+      scale(1.22)
+      rotate(7deg);
+  }
 
-    .open-book-btn:hover,
-    .open-book-btn:focus-visible{
-      transform:translateY(-2px) scale(1.02);
-      box-shadow:
-        0 14px 28px rgba(0,0,0,.38),
-        inset 0 1px 0 rgba(255,255,255,.56);
-    }
+  70%{
+    transform:
+      scale(.96)
+      rotate(-3deg);
+  }
 
-    /* =========================
-       MAIN APP
-    ========================= */
+  100%{
+    transform:scale(1);
+  }
 
-    .app{
-      min-height:100vh;
-      padding:18px 18px 28px;
-      position:relative;
-      z-index:10;
-    }
+}
 
-    .topbar{
-      width:min(1240px,96vw);
-      margin:0 auto 16px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding:14px 18px;
-      border-radius:18px;
-      background:rgba(69,43,25,.58);
-      backdrop-filter:blur(8px);
-      color:#fff0cd;
-      box-shadow:var(--shadow);
-    }
 
-    .brand{
-      font-weight:bold;
-      letter-spacing:.2px;
-    }
+/* =========================================
+   ТЕКСТ
+========================================= */
 
-    .counter{
-      color:#f3dca8;
-      font-size:.95rem;
-    }
+.text-page{
+  min-height:730px;
 
-    .book-shell{
-      width:min(1240px,96vw);
-      margin:0 auto;
-    }
+  padding:
+    clamp(30px,4vw,55px)
+    clamp(28px,4vw,60px);
 
-    .book-page{
-      display:grid;
-      grid-template-columns:1.02fr .98fr;
-      min-height:76vh;
-      border-radius:30px;
-      overflow:hidden;
-      background:linear-gradient(180deg,#f5eee1 0%, #ece0cd 100%);
-      box-shadow:0 26px 60px rgba(0,0,0,.30);
-    }
+  display:flex;
+  flex-direction:column;
 
-    .book-page.turn{
-      animation:pageTurn .55s ease;
-    }
+  background:
+    radial-gradient(
+      circle at 32% 15%,
+      rgba(255,255,255,.9),
+      transparent 31%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(103,78,51,.016)
+      0 1px,
+      transparent
+      1px 4px
+    ),
+    linear-gradient(
+      180deg,
+      var(--paper),
+      var(--paper2)
+    );
 
-    @keyframes pageTurn{
-      0%{
-        opacity:.35;
-        transform:scale(.985) rotateY(8deg);
-      }
-      100%{
-        opacity:1;
-        transform:scale(1) rotateY(0deg);
-      }
-    }
+  box-shadow:
+    inset 12px 0 28px
+    rgba(81,49,27,.07);
+}
 
-    .illustration-pane{
-      position:relative;
-      overflow:hidden;
-      background:#1f160f;
-      min-height:420px;
-    }
+.page-kicker{
+  margin:
+    0
+    0
+    10px;
 
-    .illustration-pane img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      transition:transform .35s ease, filter .35s ease;
-    }
+  color:#996a41;
 
-    .illustration-pane img.alive{
-      transform:scale(1.04) rotate(-.6deg);
-      filter:brightness(1.04) saturate(1.05);
-    }
+  text-transform:uppercase;
 
-    .illustration-overlay{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), transparent 22%),
-        linear-gradient(0deg, rgba(0,0,0,.20), transparent 25%);
-      pointer-events:none;
-    }
+  letter-spacing:1.8px;
 
-    .leaf-button{
-      position:absolute;
-      right:18px;
-      top:18px;
-      width:60px;
-      height:60px;
-      border:none;
-      border-radius:50%;
-      cursor:pointer;
-      font-size:1.6rem;
-      color:#5e390d;
-      background:radial-gradient(circle, #fff4be 0%, #ffd36b 55%, #efa62e 100%);
-      box-shadow:
-        0 0 22px rgba(255,202,95,.75),
-        0 0 50px rgba(255,171,53,.26);
-      animation:leafPulse 2.2s ease-in-out infinite;
-      font-family:inherit;
-    }
+  font-size:12px;
+}
 
-    .rudyk-button{
-      position:absolute;
-      left:18px;
-      bottom:18px;
-      border:none;
-      cursor:pointer;
-      border-radius:999px;
-      padding:11px 15px;
-      font-size:.95rem;
-      color:#fff4df;
-      background:rgba(51,33,21,.66);
-      backdrop-filter:blur(4px);
-      box-shadow:0 8px 18px rgba(0,0,0,.22);
-      font-family:inherit;
-    }
+.scene-title{
+  margin:
+    0
+    0
+    20px;
 
-    .tap-hint{
-      position:absolute;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      padding:9px 14px;
-      border-radius:999px;
-      background:rgba(49,31,20,.56);
-      color:#fff0d5;
-      font-size:.9rem;
-      backdrop-filter:blur(3px);
-      max-width:calc(100% - 170px);
-      text-align:center;
-    }
+  color:#59391f;
 
-    .speech{
-      position:absolute;
-      left:50%;
-      bottom:78px;
-      transform:translateX(-50%) translateY(10px);
-      max-width:76%;
-      padding:12px 16px;
-      border-radius:18px;
-      background:rgba(255,249,236,.96);
-      color:#5a3a20;
-      box-shadow:0 12px 30px rgba(0,0,0,.26);
-      font-size:.98rem;
-      text-align:center;
-      opacity:0;
-      transition:.28s ease;
-      pointer-events:none;
-    }
+  font-size:
+    clamp(
+      28px,
+      3vw,
+      39px
+    );
 
-    .speech.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(0);
-    }
+  line-height:1.12;
+}
 
-    .text-pane{
-      padding:clamp(24px,3.2vw,40px);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.82), rgba(247,241,230,.98)),
-        repeating-linear-gradient(
-          180deg,
-          rgba(0,0,0,0) 0px,
-          rgba(0,0,0,0) 29px,
-          rgba(124,96,68,.05) 30px
-        );
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
-    }
+.story{
+  color:#3d2c20;
 
-    .kicker{
-      margin:0 0 10px;
-      color:#936640;
-      text-transform:uppercase;
-      letter-spacing:1.6px;
-      font-size:.85rem;
-    }
+  font-size:
+    clamp(
+      17px,
+      1.5vw,
+      20px
+    );
 
-    .scene-title{
-      margin:0 0 18px;
-      color:#5c3c22;
-      font-size:clamp(1.8rem,2.1vw,2.45rem);
-      line-height:1.15;
-    }
+  line-height:1.76;
+}
 
-    .story-text{
-      color:#3e2b1f;
-      font-size:1.08rem;
-      line-height:1.78;
-    }
+.story p{
+  margin:
+    0
+    0
+    14px;
+}
 
-    .story-text p{
-      margin:0 0 14px;
-    }
 
-    .questions-box{
-      margin-top:18px;
-      padding:18px 20px;
-      border-radius:22px;
-      background:rgba(255,248,234,.9);
-      border:1px solid rgba(173,128,80,.22);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);
-    }
+/* =========================================
+   ЗАПИТАННЯ
+========================================= */
 
-    .questions-box h3{
-      margin:0 0 12px;
-      color:#7f532e;
-      font-size:1.12rem;
-    }
+.questions{
+  margin-top:auto;
+  padding-top:22px;
+}
 
-    .questions-box ul{
-      margin:0;
-      padding-left:20px;
-    }
+.questions-card{
+  padding:
+    17px
+    18px;
 
-    .questions-box li{
-      margin-bottom:10px;
-      line-height:1.55;
-    }
+  border-radius:20px;
 
-    .navigation{
-      width:min(1240px,96vw);
-      margin:18px auto 0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-    }
+  background:
+    rgba(255,250,239,.87);
 
-    .nav-btn{
-      border:none;
-      cursor:pointer;
-      min-width:132px;
-      border-radius:999px;
-      padding:13px 20px;
-      font-weight:bold;
-      font-size:1rem;
-      color:#4d2f18;
-      background:linear-gradient(180deg,#ffe9b5 0%,#e6c275 100%);
-      box-shadow:0 10px 18px rgba(0,0,0,.16);
-      transition:transform .2s ease, opacity .2s ease;
-      font-family:inherit;
-    }
+  border:
+    1px solid
+    rgba(173,126,76,.20);
+}
 
-    .nav-btn:hover:not(:disabled),
-    .nav-btn:focus-visible:not(:disabled){
-      transform:translateY(-2px);
-    }
+.questions-title{
+  margin:
+    0
+    0
+    11px;
 
-    .nav-btn:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-    }
+  color:#80552f;
 
-    .dots{
-      flex:1;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:8px;
-    }
+  font-size:16px;
+}
 
-    .dot{
-      width:12px;
-      height:12px;
-      border:none;
-      border-radius:50%;
-      cursor:pointer;
-      background:rgba(255,228,170,.42);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
-      transition:transform .2s ease, background .2s ease;
-    }
+.questions-list{
+  margin:0;
 
-    .dot.active{
-      background:#ffd17a;
-      transform:scale(1.26);
-      box-shadow:0 0 10px rgba(255,203,96,.66);
-    }
+  padding-left:21px;
+}
 
-    .final-note{
-      margin-top:16px;
-      padding:15px 16px;
-      border-radius:18px;
-      background:rgba(255,242,214,.88);
-      color:#6a4321;
-      font-style:italic;
-      line-height:1.55;
-    }
+.questions-list li{
+  margin:
+    8px
+    0;
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+  line-height:1.5;
+}
 
-    @media (max-width: 960px){
-      .book-page{
-        grid-template-columns:1fr;
-      }
 
-      .illustration-pane{
-        min-height:340px;
-      }
+/* =========================================
+   МАГІЧНА ПАУЗА
+========================================= */
 
-      .navigation{
-        flex-wrap:wrap;
-      }
+.magic-pause-text{
+  margin-top:20px;
 
-      .dots{
-        order:3;
-        width:100%;
-      }
-    }
+  padding:
+    14px
+    17px;
 
-    @media (max-width: 640px){
-      .app{
-        padding:10px 10px 22px;
-      }
+  border-radius:17px;
 
-      .topbar{
-        flex-direction:column;
-        align-items:flex-start;
-        padding:12px 14px;
-      }
+  background:
+    rgba(255,242,206,.74);
 
-      .cover-wrap{
-        width:min(96vw, 520px);
-      }
+  color:#765027;
 
-      .cover-hint{
-        font-size:.92rem;
-      }
+  text-align:center;
 
-      .cover-leaf-hotspot{
-        width:92px;
-        height:92px;
-      }
+  font-style:italic;
+}
 
-      .illustration-pane{
-        min-height:280px;
-      }
 
-      .leaf-button{
-        width:54px;
-        height:54px;
-        font-size:1.4rem;
-      }
+/* =========================================
+   НАВІГАЦІЯ
+========================================= */
 
-      .rudyk-button{
-        font-size:.9rem;
-        padding:10px 13px;
-      }
+.navigation{
+  width:min(
+    1260px,
+    96vw
+  );
 
-      .tap-hint{
-        font-size:.82rem;
-        left:14px;
-        right:14px;
-        transform:none;
-        max-width:unset;
-      }
+  margin:
+    18px
+    auto
+    0;
 
-      .story-text{
-        font-size:1rem;
-        line-height:1.72;
-      }
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 
-      .nav-btn{
-        flex:1;
-        min-width:0;
-      }
+  gap:14px;
+}
 
-      .speech{
-        max-width:86%;
-        font-size:.93rem;
-      }
-    }
-  </style>
+.nav-button{
+  min-width:132px;
+
+  padding:
+    13px
+    21px;
+
+  border:none;
+
+  border-radius:999px;
+
+  cursor:pointer;
+
+  font-family:inherit;
+  font-size:16px;
+  font-weight:700;
+
+  color:#492c16;
+
+  background:
+    linear-gradient(
+      #ffe7aa,
+      #deba69
+    );
+
+  box-shadow:
+    0 9px 19px
+    rgba(0,0,0,.18);
+
+  transition:
+    transform .2s ease,
+    opacity .2s ease;
+}
+
+.nav-button:hover:not(:disabled){
+  transform:
+    translateY(-2px);
+}
+
+.nav-button:disabled{
+  opacity:.37;
+  cursor:default;
+}
+
+.dots{
+  flex:1;
+
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+
+  gap:8px;
+}
+
+.dot{
+  width:11px;
+  height:11px;
+
+  padding:0;
+
+  border:0;
+  border-radius:50%;
+
+  cursor:pointer;
+
+  background:
+    rgba(255,224,164,.38);
+
+  transition:.2s;
+}
+
+.dot.active{
+  transform:scale(1.3);
+
+  background:#ffd17b;
+
+  box-shadow:
+    0 0 10px
+    rgba(255,199,87,.7);
+}
+
+
+/* =========================================
+   ПЕРЕГОРТАННЯ
+========================================= */
+
+.book.turn{
+  animation:
+    bookTurn
+    .52s ease;
+}
+
+@keyframes bookTurn{
+
+  from{
+    opacity:.38;
+
+    transform:
+      perspective(1600px)
+      rotateY(5deg)
+      scale(.988);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+      perspective(1600px)
+      rotateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================
+   МОБІЛЬНА ВЕРСІЯ
+========================================= */
+
+@media(max-width:900px){
+
+  body.locked{
+    overflow:auto;
+  }
+
+  .cover-screen{
+    position:fixed;
+
+    align-items:flex-start;
+
+    padding:
+      10px
+      10px
+      30px;
+  }
+
+  .cover-column{
+    margin:
+      0
+      auto;
+
+    width:min(
+      560px,
+      97vw
+    );
+  }
+
+  .cover-book{
+    width:100%;
+
+    max-height:
+      calc(
+        100vh - 105px
+      );
+
+    aspect-ratio:3/4;
+  }
+
+  .cover-image{
+    object-fit:contain;
+  }
+
+  .cover-controls{
+    padding-top:10px;
+  }
+
+  .cover-message{
+    display:none;
+  }
+
+  .open-button{
+    padding:
+      12px
+      26px;
+  }
+
+
+  .book{
+    display:block;
+
+    min-height:0;
+
+    border-radius:20px;
+  }
+
+  .book::after{
+    display:none;
+  }
+
+
+  .illustration{
+    min-height:0;
+
+    height:
+      min(
+        60vh,
+        570px
+      );
+  }
+
+
+  .text-page{
+    min-height:0;
+
+    padding:
+      29px
+      23px
+      33px;
+  }
+
+
+  .navigation{
+    flex-wrap:wrap;
+  }
+
+  .dots{
+    order:3;
+
+    width:100%;
+  }
+
+}
+
+
+/* маленькі телефони */
+
+@media(max-width:520px){
+
+  .book-app{
+    padding:
+      9px
+      9px
+      22px;
+  }
+
+  .topbar{
+    padding:
+      11px
+      13px;
+
+    flex-direction:column;
+    align-items:flex-start;
+
+    margin-bottom:9px;
+  }
+
+  .book-name{
+    font-size:14px;
+  }
+
+
+  .illustration{
+    height:
+      49vh;
+
+    min-height:330px;
+  }
+
+
+  .scene-title{
+    font-size:28px;
+  }
+
+
+  .story{
+    font-size:17px;
+    line-height:1.68;
+  }
+
+
+  .questions-list{
+    font-size:16px;
+  }
+
+
+  .nav-button{
+    flex:1;
+
+    min-width:0;
+  }
+
+
+  .dots{
+    display:none;
+  }
+
+
+  .cover-magic-zone{
+    width:82px;
+    height:82px;
+  }
+
+}
+
+
+/* якщо людина вимкнула анімації */
+
+@media(
+  prefers-reduced-motion:
+  reduce
+){
+
+  *,
+  *::before,
+  *::after{
+    animation-duration:
+      .01ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    scroll-behavior:auto !important;
+  }
+
+}
+
+</style>
 </head>
+
+
 <body class="locked">
 
-  <div id="ambientLayer" class="ambient-layer" aria-hidden="true"></div>
 
-  <!-- COVER -->
-  <section id="coverScreen" class="cover-screen">
-    <div class="cover-wrap">
-      <img class="cover-image" src="cover.png" alt="Обкладинка книги Рудик і чарівне світло осені">
-      <div class="cover-shine"></div>
+<div
+  id="autumnLayer">
+</div>
 
-      <button id="coverLeaf" class="cover-leaf-hotspot" aria-label="Чарівний листочок"></button>
 
-      <div class="cover-caption">
-        <p class="cover-hint">Натисни на чарівний листочок або кнопку, щоб відкрити книгу ✨</p>
-        <button id="openBookBtn" class="open-book-btn">Відкрити книгу</button>
+<!-- =====================================
+     ОБКЛАДИНКА
+===================================== -->
+
+<section
+  class="cover-screen"
+  id="coverScreen">
+
+  <div class="cover-column">
+
+    <div
+      class="cover-book"
+      id="coverBook">
+
+      <img
+        src="cover.png"
+        alt="Обкладинка книги Рудик і чарівне світло осені"
+        class="cover-image">
+
+      <div
+        class="cover-gloss">
       </div>
+
+      <button
+        class="cover-magic-zone"
+        id="coverMagic"
+        aria-label="Чарівний листочок">
+      </button>
+
     </div>
+
+
+    <div
+      class="cover-controls">
+
+      <p
+        class="cover-message">
+        Торкнися чарівного листочка — і книга відкриє свою таємницю ✦
+      </p>
+
+      <button
+        class="open-button"
+        id="openBook">
+
+        Відкрити книгу
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================
+     КНИГА
+===================================== -->
+
+<main
+  class="book-app hidden"
+  id="bookApp">
+
+
+  <header
+    class="topbar">
+
+    <div
+      class="book-name">
+
+      Рудик і чарівне світло осені
+
+    </div>
+
+    <div
+      class="counter"
+      id="counter">
+
+    </div>
+
+  </header>
+
+
+  <section
+    class="book"
+    id="book">
+
+
+    <!-- ІЛЮСТРАЦІЯ -->
+
+    <div
+      class="illustration">
+
+      <img
+        src="01.jpg"
+        alt=""
+        id="sceneImage"
+        class="scene-image">
+
+      <div
+        class="image-shadow">
+      </div>
+
+
+      <button
+        id="magicLeaf"
+        class="magic-leaf-button hidden-leaf"
+        aria-label="Торкнутися чарівного листочка">
+
+        <img
+          src="magic-leaf.png"
+          alt=""
+          class="magic-leaf-image">
+
+      </button>
+
+    </div>
+
+
+    <!-- ТЕКСТ -->
+
+    <article
+      class="text-page">
+
+      <p
+        class="page-kicker"
+        id="pageKicker">
+      </p>
+
+      <h2
+        class="scene-title"
+        id="sceneTitle">
+      </h2>
+
+      <div
+        class="story"
+        id="story">
+      </div>
+
+
+      <div
+        class="questions"
+        id="questionsBlock">
+
+        <div
+          class="questions-card">
+
+          <h3
+            class="questions-title">
+
+            ✦ Після читання
+
+          </h3>
+
+          <ul
+            class="questions-list"
+            id="questions">
+          </ul>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="magic-pause-text hidden"
+        id="magicPause">
+      </div>
+
+    </article>
+
   </section>
 
-  <!-- APP -->
-  <main id="bookApp" class="app hidden">
-    <header class="topbar">
-      <div class="brand">Рудик і чарівне світло осені</div>
-      <div class="counter" id="pageCounter">Сторінка 1 з 10</div>
-    </header>
 
-    <section class="book-shell">
-      <article id="bookPage" class="book-page">
-        <div class="illustration-pane">
-          <img id="sceneImage" src="01.jpg" alt="Ілюстрація до сторінки казки">
-          <div class="illustration-overlay"></div>
+  <nav
+    class="navigation">
 
-          <button id="sceneLeafBtn" class="leaf-button" aria-label="Створити магію">🍁</button>
-          <button id="rudykBtn" class="rudyk-button">🦊 Торкнися Рудика</button>
-          <div class="tap-hint">Натисни на чарівний листочок або на Рудика</div>
-          <div id="speechBubble" class="speech"></div>
-        </div>
+    <button
+      class="nav-button"
+      id="prev">
 
-        <div class="text-pane">
-          <p id="sceneKicker" class="kicker">Сторінка 1</p>
-          <h2 id="sceneTitle" class="scene-title">Осінній сад Рудика</h2>
+      ← Назад
 
-          <div id="sceneText" class="story-text"></div>
+    </button>
 
-          <div class="questions-box">
-            <h3>Короткі запитання</h3>
-            <ul id="questionList"></ul>
-          </div>
 
-          <div id="finalNote" class="final-note hidden">
-            Якщо хочеш, натисни <strong>«На початок ↺»</strong> і прочитай казку ще раз.
-          </div>
-        </div>
-      </article>
-    </section>
+    <div
+      class="dots"
+      id="dots">
+    </div>
 
-    <footer class="navigation">
-      <button id="prevBtn" class="nav-btn">← Назад</button>
-      <div id="dots" class="dots"></div>
-      <button id="nextBtn" class="nav-btn">Далі →</button>
-    </footer>
-  </main>
 
-  <script>
-    const pages = [
-      {
-        image: "01.jpg",
-        kicker: "Сторінка 1",
-        title: "Осінній сад Рудика",
-        text: [
-          "У самому серці стародавнього саду жило маленьке лисеня на ім’я Рудик. Він був незвичайним лисом, бо понад усе на світі любив осінь.",
-          "Кожного ранку Рудик пов’язував свій улюблений синій шарфик і вирушав на прогулянку, щоб послухати, як шелестить під лапками золоте листя. Його хутро було таким же яскравим, як і навколишні дерева."
-        ],
-        questions: [
-          "Як звали маленьке лисеня?",
-          "Яку пору року найбільше любив Рудик?",
-          "Що він любив слухати під час прогулянки?"
-        ],
-        speech: "Шурх-шурх... Чуєш, як лагідно говорить осіннє листя?"
-      },
-      {
-        image: "02.jpg",
-        kicker: "Сторінка 2",
-        title: "Останній чарівний листочок",
-        text: [
-          "Одного дня Рудик помітив, що дерева стали майже порожніми. Вітер забрав майже все листя, залишивши сад тихим і трохи сумним.",
-          "Але на найвищій гілці старого клена він побачив дещо дивовижне. Там висів останній листочок, який не просто жовтів — він сяяв, ніби маленька зірка, що спустилася з неба."
-        ],
-        questions: [
-          "Що сталося з деревами?",
-          "Де Рудик побачив чарівний листочок?",
-          "На що був схожий сяючий лист?"
-        ],
-        speech: "Дивись! Він не просто листочок... у ньому є справжня магія."
-      },
-      {
-        image: "03.jpg",
-        kicker: "Сторінка 3",
-        title: "Листочок Бажань",
-        text: [
-          "Раптом легкий вітерець підхопив листочок, і той повільно опустився прямо в лапки Рудику. Як тільки лисеня торкнулося його, воно відчуло дивне тепло.",
-          "Це був чарівний Листочок Бажань. У лісі казали, що той, хто знайде останній лист, може здійснити будь-яку свою мрію.",
-          "Рудик міцно тримав свій скарб, боячись його випустити."
-        ],
-        questions: [
-          "Як чарівний листочок потрапив до Рудика?",
-          "Як називався цей лист?",
-          "Що міг зробити той, хто його знайде?"
-        ],
-        speech: "Яке диво... а яке бажання загадав би ти?"
-      },
-      {
-        image: "04.jpg",
-        kicker: "Сторінка 4",
-        title: "Найважливіше бажання",
-        text: [
-          "Лисеня почало думати про своє бажання.",
-          "«Можливо, я хочу цілу гору солодких ягід? Або щоб мій синій шарфик ніколи не зношувався?» — міркувало воно.",
-          "Але чим довше Рудик дивився на чарівний вогник, тим більше розумів, що йому хочеться чогось зовсім іншого, чого не можна просто з’їсти чи вдягнути."
-        ],
-        questions: [
-          "Про які бажання спочатку думав Рудик?",
-          "Чому вони перестали здаватися йому найголовнішими?",
-          "Як ти гадаєш, чого насправді хотілося Рудику?"
-        ],
-        speech: "Іноді найголовніше бажання живе не в животі, а в серці."
-      },
-      {
-        image: "05.jpg",
-        kicker: "Сторінка 5",
-        title: "Сумна дівчинка на містку",
-        text: [
-          "Неподалік, на дерев’яному містку через струмок, стояла дівчинка на ім’я Мія. Вона нещодавно переїхала до будиночка біля саду і ще не встигла знайти друзів.",
-          "Мія сумно дивилася на воду, де плавали поодинокі листочки. Їй було трохи самотньо в цьому великому золотому саду, де вона нікого не знала."
-        ],
-        questions: [
-          "Як звали дівчинку?",
-          "Чому Мія почувалася самотньою?",
-          "Де саме стояла Мія?"
-        ],
-        speech: "Мені здається, їй теж бракує когось близького..."
-      },
-      {
-        image: "06.jpg",
-        kicker: "Сторінка 6",
-        title: "Правильне рішення",
-        text: [
-          "Рудик побачив Мію і відчув, як його серце підказує правильне рішення. Воно знало, як це — бути одному.",
-          "Лисеня обережно почало пробиратися крізь кущі, намагаючись не налякати дівчинку. Сяючий листочок у його лапці освітлював шлях, наче маленький чарівний ліхтарик."
-        ],
-        questions: [
-          "Що підказало Рудику серце?",
-          "Чому він добре розумів Мію?",
-          "На що був схожий чарівний листочок у його лапці?"
-        ],
-        speech: "Тихенько... лише б не злякати її."
-      },
-      {
-        image: "07.jpg",
-        kicker: "Сторінка 7",
-        title: "Перший крок до дружби",
-        text: [
-          "Мія почула шурхіт і обернулася. Перед нею, прямо на каменях біля містка, стояло пухнасте лисеня.",
-          "Воно не втекло, а навпаки — підійшло ближче і простягнуло їй чарівний листочок.",
-          "Світло від нього було таким яскравим і теплим, що сум Мії миттєво зник, поступившись місцем справжньому захопленню."
-        ],
-        questions: [
-          "Що зробила Мія, почувши шурхіт?",
-          "Що простягнув їй Рудик?",
-          "Як змінився настрій дівчинки?"
-        ],
-        speech: "Не бійся... це для тебе."
-      },
-      {
-        image: "08.jpg",
-        kicker: "Сторінка 8",
-        title: "Два самотні серця",
-        text: [
-          "«Це мені?» — тихо запитала Мія.",
-          "Рудик кивнув і тихенько ткнувся носом у її руку. Дівчинка обережно взяла листочок за черешок. Тепер вони обидва торкалися магії.",
-          "У цей момент вони зрозуміли, що чарівний лист знайшов своє справжнє призначення — поєднати два самотніх серця."
-        ],
-        questions: [
-          "Що запитала Мія?",
-          "Як Рудик відповів їй без слів?",
-          "Яке справжнє призначення мав чарівний листочок?"
-        ],
-        speech: "Здається, моє бажання вже здійснилося..."
-      },
-      {
-        image: "09.jpg",
-        kicker: "Сторінка 9",
-        title: "Мить справжнього дива",
-        text: [
-          "І в цю мить осінній сад засяяв по-новому. Золоті іскорки закружляли в повітрі, а навколо Мії та Рудика розлилося тепле чарівне світло.",
-          "Здавалося, ніби сама осінь усміхнулася їм у відповідь. Так почалося справжнє диво — диво дружби."
-        ],
-        questions: [
-          "Що сталося в осінньому саду?",
-          "Яке диво почалося для Рудика і Мії?",
-          "Який настрій викликає ця чарівна мить?"
-        ],
-        speech: "Найтепліше світло народжується там, де є дружба."
-      },
-      {
-        image: "10.jpg",
-        kicker: "Сторінка 10",
-        title: "Найтепліше світло",
-        text: [
-          "Тепер кожного дня в осінньому саду можна побачити незвичайну пару: маленьку дівчинку та лисеня в синьому шарфику. Вони разом грають у листі та шукають нові пригоди.",
-          "Рудик зрозумів головний секрет: магія стає сильнішою, коли ти ділишся нею з другом. А найтепліше світло — це те, що сяє в очах дорогої тобі істоти."
-        ],
-        questions: [
-          "Кого тепер можна побачити разом у саду?",
-          "Який головний секрет зрозумів Рудик?",
-          "Що для тебе означає справжня дружба?"
-        ],
-        speech: "Ходімо! Попереду ще стільки добрих пригод."
+    <button
+      class="nav-button"
+      id="next">
+
+      Далі →
+
+    </button>
+
+  </nav>
+
+</main>
+
+
+<script>
+
+
+/* =====================================
+   СТОРІНКИ
+===================================== */
+
+
+const pages=[
+
+
+{
+  image:"01.jpg",
+
+  kicker:"Сторінка 1",
+
+  title:"Осінній сад Рудика",
+
+  text:[
+    "У самому серці стародавнього саду жило маленьке лисеня на ім’я Рудик. Він був незвичайним лисом, бо понад усе на світі любив осінь.",
+
+    "Кожного ранку Рудик пов’язував свій улюблений синій шарфик і вирушав на прогулянку, щоб послухати, як шелестить під лапками золоте листя. Його хутро було таким же яскравим, як і навколишні дерева."
+  ],
+
+  questions:[
+    "Як звали маленьке лисеня?",
+    "Яку пору року найбільше любив Рудик?",
+    "Що він любив слухати під час прогулянки?"
+  ],
+
+  leaf:{
+    show:false
+  }
+},
+
+
+{
+  image:"02.jpg",
+
+  kicker:"Сторінка 2",
+
+  title:"Останній листочок",
+
+  text:[
+    "Одного дня Рудик помітив, що дерева стали майже порожніми. Вітер забрав майже все листя, залишивши сад тихим і трохи сумним.",
+
+    "Але на найвищій гілці старого клена він побачив дещо дивовижне. Там висів останній листочок, який не просто жовтів — він сяяв, ніби маленька зірка, що спустилася з неба."
+  ],
+
+  questions:[
+    "Що сталося з деревами?",
+    "Де Рудик побачив останній листочок?",
+    "На що він був схожий?"
+  ],
+
+  leaf:{
+    show:true,
+    left:69,
+    top:17,
+    size:76,
+    rotation:-8
+  }
+},
+
+
+{
+  image:"03.jpg",
+
+  kicker:"Сторінка 3",
+
+  title:"Листочок Бажань",
+
+  text:[
+    "Раптом легкий вітерець підхопив листочок, і той повільно опустився прямо в лапки Рудику. Як тільки лисеня торкнулося його, він відчув дивне тепло.",
+
+    "Це був чарівний Листочок Бажань. У лісі казали, що той, хто знайде останній лист, може здійснити будь-яку свою мрію.",
+
+    "Рудик міцно тримав свій скарб, боячись його випустити."
+  ],
+
+  questions:[
+    "Як листочок потрапив до Рудика?",
+    "Як називався чарівний лист?",
+    "Що міг здійснити той, хто його знайде?"
+  ],
+
+  leaf:{
+    show:true,
+    left:58,
+    top:58,
+    size:86,
+    rotation:5
+  }
+},
+
+
+{
+  image:"04.jpg",
+
+  kicker:"Сторінка 4",
+
+  title:"Про що мріяв Рудик?",
+
+  text:[
+    "Лисеня почало думати про своє бажання.",
+
+    "«Можливо, я хочу цілу гору солодких ягід? Або щоб мій синій шарфик ніколи не зношувався?» — міркував він.",
+
+    "Але чим довше він дивився на чарівний вогник, тим більше розумів, що йому хочеться чогось зовсім іншого, чого не можна просто з’їсти чи вдягнути."
+  ],
+
+  questions:[
+    "Про які бажання думав Рудик?",
+    "Чому вони вже не здавалися йому найголовнішими?",
+    "Чого, на твою думку, він насправді хотів?"
+  ],
+
+  leaf:{
+    show:true,
+    left:38,
+    top:69,
+    size:72,
+    rotation:-14
+  }
+},
+
+
+{
+  image:"05.jpg",
+
+  kicker:"Сторінка 5",
+
+  title:"Дівчинка на містку",
+
+  text:[
+    "Неподалік, на дерев’яному містку через струмок, стояла дівчинка на ім’я Мія. Вона нещодавно переїхала до будиночка біля саду і ще не встигла знайти друзів.",
+
+    "Мія сумно дивилася на воду, де плавали поодинокі листочки. Їй було трохи самотньо в цьому великому золотому саду, де вона нікого не знала."
+  ],
+
+  questions:[
+    "Як звали дівчинку?",
+    "Чому Мії було сумно?",
+    "Де вона стояла?"
+  ],
+
+  leaf:{
+    show:false
+  }
+},
+
+
+{
+  image:"06.jpg",
+
+  kicker:"Сторінка 6",
+
+  title:"Правильне рішення",
+
+  text:[
+    "Рудик побачив Мію і відчув, як його серце підказує правильне рішення. Він знав, як це — бути одному.",
+
+    "Лисеня обережно почало пробиратися крізь кущі, намагаючись не налякати дівчинку. Сяючий листочок у його лапці освітлював шлях, наче маленький чарівний ліхтарик."
+  ],
+
+  questions:[
+    "Що підказало Рудику серце?",
+    "Чому він розумів Мію?",
+    "На що був схожий сяючий листочок?"
+  ],
+
+  leaf:{
+    show:true,
+    left:52,
+    top:56,
+    size:67,
+    rotation:7
+  }
+},
+
+
+{
+  image:"07.jpg",
+
+  kicker:"Сторінка 7",
+
+  title:"Перший крок до дружби",
+
+  text:[
+    "Мія почула шурхіт і обернулася. Перед нею, прямо на каменях біля містка, стояло пухнасте лисеня.",
+
+    "Воно не втекло, а навпаки — підійшло ближче і простягнуло їй чарівний листочок.",
+
+    "Світло від нього було таким яскравим і теплим, що сум Мії миттєво зник, поступившись місцем справжньому захопленню."
+  ],
+
+  questions:[
+    "Що зробила Мія, почувши шурхіт?",
+    "Що простягнуло їй лисеня?",
+    "Як змінився настрій Мії?"
+  ],
+
+  leaf:{
+    show:true,
+    left:48,
+    top:52,
+    size:78,
+    rotation:-5
+  }
+},
+
+
+{
+  image:"08.jpg",
+
+  kicker:"Сторінка 8",
+
+  title:"Два самотні серця",
+
+  text:[
+    "«Це мені?» — тихо запитала Мія.",
+
+    "Рудик кивнув і тихенько ткнувся носом у її руку. Дівчинка обережно взяла листочок за черешок. Тепер вони обидва торкалися магії.",
+
+    "У цей момент вони зрозуміли, що чарівний лист знайшов своє справжнє призначення — поєднати два самотніх серця."
+  ],
+
+  questions:[
+    "Що запитала Мія?",
+    "Як Рудик відповів їй без слів?",
+    "Яке справжнє призначення мав чарівний лист?"
+  ],
+
+  leaf:{
+    show:true,
+    left:56,
+    top:67,
+    size:82,
+    rotation:9
+  }
+},
+
+
+/* 09.jpg — окремий візуальний
+   чарівний момент.
+   Нового сюжету сюди не додаємо. */
+
+{
+  image:"09.jpg",
+
+  kicker:"Чарівна мить",
+
+  title:"Магія дружби",
+
+  text:[],
+
+  questions:[],
+
+  pause:
+    "Зупинися на мить і просто роздивися цю сцену. Які почуття вона викликає?",
+
+  leaf:{
+    show:true,
+    left:66,
+    top:31,
+    size:92,
+    rotation:-9
+  }
+},
+
+
+{
+  image:"10.jpg",
+
+  kicker:"Фінал",
+
+  title:"Найтепліше світло",
+
+  text:[
+    "Тепер кожного дня в осінньому саду можна побачити незвичайну пару: маленьку дівчинку та лисеня в синьому шарфику. Вони разом грають у листі та шукають нові пригоди.",
+
+    "Рудик зрозумів головний секрет: магія стає сильнішою, коли ти ділишся нею з другом. А найтепліше світло — це те, що сяє в очах дорогої тобі істоти."
+  ],
+
+  questions:[
+    "Кого тепер можна побачити разом у саду?",
+    "Який секрет зрозумів Рудик?",
+    "Що для тебе означає справжня дружба?"
+  ],
+
+  leaf:{
+    show:false
+  }
+}
+
+];
+
+
+
+/* =====================================
+   ЕЛЕМЕНТИ
+===================================== */
+
+
+const coverScreen=
+  document.getElementById(
+    "coverScreen"
+  );
+
+const coverBook=
+  document.getElementById(
+    "coverBook"
+  );
+
+const coverMagic=
+  document.getElementById(
+    "coverMagic"
+  );
+
+const openBookButton=
+  document.getElementById(
+    "openBook"
+  );
+
+const bookApp=
+  document.getElementById(
+    "bookApp"
+  );
+
+const book=
+  document.getElementById(
+    "book"
+  );
+
+const sceneImage=
+  document.getElementById(
+    "sceneImage"
+  );
+
+const magicLeaf=
+  document.getElementById(
+    "magicLeaf"
+  );
+
+const pageKicker=
+  document.getElementById(
+    "pageKicker"
+  );
+
+const sceneTitle=
+  document.getElementById(
+    "sceneTitle"
+  );
+
+const story=
+  document.getElementById(
+    "story"
+  );
+
+const questions=
+  document.getElementById(
+    "questions"
+  );
+
+const questionsBlock=
+  document.getElementById(
+    "questionsBlock"
+  );
+
+const magicPause=
+  document.getElementById(
+    "magicPause"
+  );
+
+const counter=
+  document.getElementById(
+    "counter"
+  );
+
+const prev=
+  document.getElementById(
+    "prev"
+  );
+
+const next=
+  document.getElementById(
+    "next"
+  );
+
+const dots=
+  document.getElementById(
+    "dots"
+  );
+
+const autumnLayer=
+  document.getElementById(
+    "autumnLayer"
+  );
+
+
+let current=0;
+
+
+
+/* =====================================
+   КРАПКИ
+===================================== */
+
+
+function makeDots(){
+
+  dots.innerHTML="";
+
+  pages.forEach(
+    (_,index)=>{
+
+      const dot=
+        document.createElement(
+          "button"
+        );
+
+      dot.className="dot";
+
+      dot.setAttribute(
+        "aria-label",
+        `Сторінка ${index+1}`
+      );
+
+      if(index===current){
+        dot.classList.add(
+          "active"
+        );
       }
-    ];
 
-    const coverScreen = document.getElementById("coverScreen");
-    const openBookBtn = document.getElementById("openBookBtn");
-    const coverLeaf = document.getElementById("coverLeaf");
-    const bookApp = document.getElementById("bookApp");
+      dot.onclick=()=>{
+        current=index;
+        render();
+      };
 
-    const bookPage = document.getElementById("bookPage");
-    const sceneImage = document.getElementById("sceneImage");
-    const sceneKicker = document.getElementById("sceneKicker");
-    const sceneTitle = document.getElementById("sceneTitle");
-    const sceneText = document.getElementById("sceneText");
-    const questionList = document.getElementById("questionList");
-    const pageCounter = document.getElementById("pageCounter");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const dots = document.getElementById("dots");
-    const sceneLeafBtn = document.getElementById("sceneLeafBtn");
-    const rudykBtn = document.getElementById("rudykBtn");
-    const speechBubble = document.getElementById("speechBubble");
-    const finalNote = document.getElementById("finalNote");
-    const ambientLayer = document.getElementById("ambientLayer");
+      dots.appendChild(dot);
 
-    let currentPage = 0;
+    }
+  );
 
-    function buildDots(){
-      dots.innerHTML = "";
-      pages.forEach((_, index) => {
-        const dot = document.createElement("button");
-        dot.className = "dot";
-        dot.setAttribute("aria-label", `Перейти до сторінки ${index + 1}`);
-        dot.addEventListener("click", () => {
-          currentPage = index;
-          renderPage();
-        });
-        dots.appendChild(dot);
-      });
+}
+
+
+
+/* =====================================
+   ВІДОБРАЖЕННЯ СТОРІНКИ
+===================================== */
+
+
+function render(){
+
+  const page=
+    pages[current];
+
+
+  sceneImage.src=
+    page.image;
+
+  sceneImage.alt=
+    page.title;
+
+
+  pageKicker.textContent=
+    page.kicker;
+
+  sceneTitle.textContent=
+    page.title;
+
+
+  story.innerHTML=
+    page.text
+    .map(
+      paragraph=>
+      `<p>${paragraph}</p>`
+    )
+    .join("");
+
+
+  questions.innerHTML=
+    page.questions
+    .map(
+      question=>
+      `<li>${question}</li>`
+    )
+    .join("");
+
+
+  const hasQuestions=
+    page.questions.length>0;
+
+  questionsBlock
+    .classList
+    .toggle(
+      "hidden",
+      !hasQuestions
+    );
+
+
+  if(page.pause){
+
+    magicPause.textContent=
+      page.pause;
+
+    magicPause
+      .classList
+      .remove(
+        "hidden"
+      );
+
+  }else{
+
+    magicPause
+      .classList
+      .add(
+        "hidden"
+      );
+
+  }
+
+
+  counter.textContent=
+    `${current+1} / ${pages.length}`;
+
+
+  prev.disabled=
+    current===0;
+
+
+  if(
+    current===
+    pages.length-1
+  ){
+
+    next.textContent=
+      "На початок ↺";
+
+  }else{
+
+    next.textContent=
+      "Далі →";
+
+  }
+
+
+  /* листок */
+
+  if(
+    page.leaf &&
+    page.leaf.show
+  ){
+
+    magicLeaf
+      .classList
+      .remove(
+        "hidden-leaf"
+      );
+
+    magicLeaf.style.left=
+      page.leaf.left+"%";
+
+    magicLeaf.style.top=
+      page.leaf.top+"%";
+
+    magicLeaf.style.width=
+      page.leaf.size+"px";
+
+    magicLeaf.style.setProperty(
+      "--rotation",
+      page.leaf.rotation+"deg"
+    );
+
+  }else{
+
+    magicLeaf
+      .classList
+      .add(
+        "hidden-leaf"
+      );
+
+  }
+
+
+  /* анімація сторінки */
+
+  book.classList.remove(
+    "turn"
+  );
+
+  sceneImage.classList.remove(
+    "page-enter"
+  );
+
+  void book.offsetWidth;
+
+  book.classList.add(
+    "turn"
+  );
+
+  sceneImage.classList.add(
+    "page-enter"
+  );
+
+
+  makeDots();
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+
+/* =====================================
+   НАВІГАЦІЯ
+===================================== */
+
+
+prev.onclick=()=>{
+
+  if(current>0){
+
+    current--;
+
+    render();
+
+  }
+
+};
+
+
+next.onclick=()=>{
+
+  if(
+    current<
+    pages.length-1
+  ){
+
+    current++;
+
+  }else{
+
+    current=0;
+
+  }
+
+  render();
+
+};
+
+
+
+/* =====================================
+   ЧАРІВНИЙ ЛИСТОЧОК
+===================================== */
+
+
+magicLeaf.onclick=
+(event)=>{
+
+  event.stopPropagation();
+
+  const rect=
+    magicLeaf
+    .getBoundingClientRect();
+
+  sparkleBurst(
+    rect.left+
+    rect.width/2,
+
+    rect.top+
+    rect.height/2,
+
+    30
+  );
+
+
+  magicLeaf
+    .classList
+    .remove(
+      "magic-click"
+    );
+
+  void magicLeaf.offsetWidth;
+
+  magicLeaf
+    .classList
+    .add(
+      "magic-click"
+    );
+
+
+  setTimeout(
+    ()=>{
+
+      magicLeaf
+        .classList
+        .remove(
+          "magic-click"
+        );
+
+    },
+    800
+  );
+
+};
+
+
+
+/* =====================================
+   ІСКРИ
+===================================== */
+
+
+function sparkleBurst(
+  x,
+  y,
+  count=24
+){
+
+  for(
+    let i=0;
+    i<count;
+    i++
+  ){
+
+    const spark=
+      document.createElement(
+        "span"
+      );
+
+    spark.className=
+      "spark";
+
+    spark.style.left=
+      x+"px";
+
+    spark.style.top=
+      y+"px";
+
+
+    const distance=
+      50+
+      Math.random()*120;
+
+    const angle=
+      Math.random()*
+      Math.PI*2;
+
+
+    spark.style.setProperty(
+      "--sx",
+      Math.cos(angle)*
+      distance+"px"
+    );
+
+    spark.style.setProperty(
+      "--sy",
+      Math.sin(angle)*
+      distance+"px"
+    );
+
+
+    document.body
+      .appendChild(
+        spark
+      );
+
+
+    setTimeout(
+      ()=>spark.remove(),
+      950
+    );
+
+  }
+
+}
+
+
+
+/* =====================================
+   ОБКЛАДИНКА
+===================================== */
+
+
+function openBook(){
+
+  coverBook
+    .classList
+    .add(
+      "opening"
+    );
+
+
+  createLeaves(7);
+
+
+  setTimeout(
+    ()=>{
+
+      coverScreen
+        .classList
+        .add(
+          "opened"
+        );
+
+    },
+    380
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      coverScreen
+        .classList
+        .add(
+          "hidden"
+        );
+
+      bookApp
+        .classList
+        .remove(
+          "hidden"
+        );
+
+      document.body
+        .classList
+        .remove(
+          "locked"
+        );
+
+      render();
+
+    },
+    820
+  );
+
+}
+
+
+openBookButton.onclick=
+()=>{
+
+  const rect=
+    openBookButton
+      .getBoundingClientRect();
+
+  sparkleBurst(
+    rect.left+
+    rect.width/2,
+
+    rect.top+
+    rect.height/2,
+
+    15
+  );
+
+  setTimeout(
+    openBook,
+    170
+  );
+
+};
+
+
+coverMagic.onclick=
+()=>{
+
+  const rect=
+    coverMagic
+      .getBoundingClientRect();
+
+  sparkleBurst(
+    rect.left+
+    rect.width/2,
+
+    rect.top+
+    rect.height/2,
+
+    35
+  );
+
+  setTimeout(
+    openBook,
+    230
+  );
+
+};
+
+
+
+/* =====================================
+   ОСІННЄ ЛИСТЯ
+===================================== */
+
+
+function createLeaves(
+  amount=1
+){
+
+  const symbols=[
+    "🍂",
+    "🍁"
+  ];
+
+
+  for(
+    let i=0;
+    i<amount;
+    i++
+  ){
+
+    const leaf=
+      document.createElement(
+        "span"
+      );
+
+
+    leaf.className=
+      "fall-leaf";
+
+
+    leaf.textContent=
+      symbols[
+        Math.floor(
+          Math.random()*
+          symbols.length
+        )
+      ];
+
+
+    leaf.style.left=
+      Math.random()*
+      100+"vw";
+
+
+    leaf.style.fontSize=
+      12+
+      Math.random()*15+
+      "px";
+
+
+    leaf.style.animationDuration=
+      10+
+      Math.random()*10+
+      "s";
+
+
+    leaf.style.setProperty(
+      "--drift",
+      -95+
+      Math.random()*190+
+      "px"
+    );
+
+
+    autumnLayer
+      .appendChild(
+        leaf
+      );
+
+
+    setTimeout(
+      ()=>leaf.remove(),
+      22000
+    );
+
+  }
+
+}
+
+
+/* листя дуже рідке */
+
+setInterval(
+  ()=>createLeaves(1),
+  4400
+);
+
+
+
+/* =====================================
+   КЛАВІАТУРА
+===================================== */
+
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(
+      bookApp
+      .classList
+      .contains(
+        "hidden"
+      )
+    ){
+      return;
     }
 
-    function renderPage(){
-      const page = pages[currentPage];
 
-      sceneImage.src = page.image;
-      sceneImage.alt = page.title;
-      sceneKicker.textContent = page.kicker;
-      sceneTitle.textContent = page.title;
-      sceneText.innerHTML = page.text.map(p => `<p>${p}</p>`).join("");
-      questionList.innerHTML = page.questions.map(q => `<li>${q}</li>`).join("");
-      pageCounter.textContent = `Сторінка ${currentPage + 1} з ${pages.length}`;
-
-      prevBtn.disabled = currentPage === 0;
-      nextBtn.textContent = currentPage === pages.length - 1 ? "На початок ↺" : "Далі →";
-
-      [...dots.children].forEach((dot, index) => {
-        dot.classList.toggle("active", index === currentPage);
-      });
-
-      finalNote.classList.toggle("hidden", currentPage !== pages.length - 1);
-
-      speechBubble.classList.remove("show");
-      sceneImage.classList.remove("alive");
-
-      bookPage.classList.remove("turn");
-      void bookPage.offsetWidth;
-      bookPage.classList.add("turn");
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    if(
+      event.key===
+      "ArrowRight"
+    ){
+      next.click();
     }
 
-    function sparkleBurst(x, y, count = 20){
-      for(let i = 0; i < count; i++){
-        const spark = document.createElement("span");
-        spark.className = "spark";
-        spark.style.left = `${x}px`;
-        spark.style.top = `${y}px`;
-        spark.style.setProperty("--tx", `${(Math.random() - 0.5) * 180}px`);
-        spark.style.setProperty("--ty", `${(Math.random() - 0.5) * 180}px`);
-        document.body.appendChild(spark);
-        setTimeout(() => spark.remove(), 900);
-      }
+
+    if(
+      event.key===
+      "ArrowLeft"
+    ){
+      prev.click();
     }
 
-    function burstFromElement(el, count = 20){
-      const rect = el.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      sparkleBurst(x, y, count);
-    }
+  }
+);
 
-    function showSpeech(text){
-      speechBubble.textContent = text;
-      speechBubble.classList.add("show");
-      setTimeout(() => {
-        speechBubble.classList.remove("show");
-      }, 3800);
-    }
 
-    function openBook(){
-      coverScreen.classList.add("opening");
-      setTimeout(() => {
-        coverScreen.classList.add("hidden");
-        bookApp.classList.remove("hidden");
-        document.body.classList.remove("locked");
-        createLeaves(6);
-        renderPage();
-      }, 700);
-    }
 
-    openBookBtn.addEventListener("click", () => {
-      burstFromElement(openBookBtn, 18);
-      setTimeout(openBook, 180);
-    });
+/* =====================================
+   СТАРТ
+===================================== */
 
-    coverLeaf.addEventListener("click", () => {
-      burstFromElement(coverLeaf, 34);
-      setTimeout(openBook, 220);
-    });
 
-    prevBtn.addEventListener("click", () => {
-      if(currentPage > 0){
-        currentPage--;
-        renderPage();
-      }
-    });
+makeDots();
 
-    nextBtn.addEventListener("click", () => {
-      if(currentPage < pages.length - 1){
-        currentPage++;
-      } else {
-        currentPage = 0;
-      }
-      renderPage();
-    });
+</script>
 
-    rudykBtn.addEventListener("click", () => {
-      sceneImage.classList.add("alive");
-      burstFromElement(rudykBtn, 22);
-      showSpeech(pages[currentPage].speech);
-      setTimeout(() => sceneImage.classList.remove("alive"), 420);
-    });
-
-    sceneLeafBtn.addEventListener("click", () => {
-      burstFromElement(sceneLeafBtn, 28);
-    });
-
-    sceneImage.addEventListener("click", (event) => {
-      sparkleBurst(event.clientX, event.clientY, 18);
-      sceneImage.classList.add("alive");
-      setTimeout(() => sceneImage.classList.remove("alive"), 350);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if(!bookApp.classList.contains("hidden")){
-        if(event.key === "ArrowRight"){
-          nextBtn.click();
-        }
-        if(event.key === "ArrowLeft"){
-          prevBtn.click();
-        }
-      }
-    });
-
-    function createLeaves(amount = 1){
-      const symbols = ["🍁","🍂"];
-      for(let i = 0; i < amount; i++){
-        const leaf = document.createElement("span");
-        leaf.className = "ambient-leaf";
-        leaf.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        leaf.style.left = `${Math.random() * 100}vw`;
-        leaf.style.fontSize = `${14 + Math.random() * 18}px`;
-        leaf.style.animationDuration = `${10 + Math.random() * 10}s`;
-        leaf.style.setProperty("--drift", `${-100 + Math.random() * 200}px`);
-        ambientLayer.appendChild(leaf);
-        setTimeout(() => leaf.remove(), 22000);
-      }
-    }
-
-    buildDots();
-    setInterval(() => createLeaves(1), 3800);
-  </script>
 </body>
 </html>
